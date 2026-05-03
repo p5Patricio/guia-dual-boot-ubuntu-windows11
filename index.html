@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guía Dual Boot: Ubuntu 26.04 LTS + Windows 11 — Dev & Performance Stack</title>
+<link rel="icon" type="image/svg+xml" href="LogoDark.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -456,16 +457,57 @@
   a:hover { text-decoration: underline; }
 
   strong { color: var(--text-bright); }
+
+  /* Language switcher */
+  .lang-switch {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    gap: 0;
+    background: var(--bg-card, #12121a);
+    border: 1px solid var(--border, #2a2a3d);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  .lang-switch button {
+    background: transparent;
+    border: none;
+    color: var(--text-dim, #8888a0);
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: inherit;
+    transition: all 0.2s;
+  }
+  .lang-switch button:hover { color: var(--text-bright, #f0f0ff); }
+  .lang-switch button.active { background: var(--accent-blue, #6ea8fe); color: #0a0a0f; }
+
+  [data-lang="en"] { display: none; }
+  html[lang="en"] [data-lang="es"] { display: none; }
+  html[lang="en"] [data-lang="en"] { display: inline; }
+  html[lang="en"] [data-lang="en"].block, html[lang="en"] div[data-lang="en"], html[lang="en"] p[data-lang="en"], html[lang="en"] h1[data-lang="en"], html[lang="en"] h2[data-lang="en"], html[lang="en"] h3[data-lang="en"], html[lang="en"] li[data-lang="en"], html[lang="en"] pre[data-lang="en"] { display: block; }
+  html[lang="en"] [data-lang="en"].flex { display: flex; }
+  html[lang="en"] ul[data-lang="en"] { display: block; }
+  html[lang="en"] [data-lang="es"] { display: none !important; }
 </style>
 <base target="_blank">
 </head>
 <body>
+<!-- Language Switcher -->
+<div class="lang-switch">
+  <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+  <button id="btn-en" onclick="setLang('en')">EN</button>
+</div>
 
-<!-- ═══════════════════ HERO ═══════════════════ -->
+<!-- HERO -->
 <div class="hero">
-  <div class="badge">Guía actualizada — Ubuntu 26.04 LTS — Abril 2026</div>
-  <h1>Dual Boot: <span>Ubuntu 26.04 LTS</span><br>+ Windows 11</h1>
-  <p class="subtitle">Setup de alto rendimiento para desarrollo full-stack, AI local ligero, y gaming en Windows. Optimizado para fluidez extrema en tu hardware.</p>
+  <div class="badge" data-lang="es">Guía actualizada — Ubuntu 26.04 LTS — Abril 2026</div><div class="badge" data-lang="en">Updated Guide — Ubuntu 26.04 LTS — April 2026</div>
+  <h1 data-lang="es">Dual Boot: <span>Ubuntu 26.04 LTS</span><br>+ Windows 11</h1><h1 data-lang="en">Dual Boot: <span>Ubuntu 26.04 LTS</span><br>+ Windows 11</h1>
+  <p class="subtitle" data-lang="es">Setup de alto rendimiento para desarrollo, AI local y gaming.</p><p class="subtitle" data-lang="en">High-performance setup for development, local AI, and gaming.</p>
   <div class="specs">
     <div class="spec-tag">RTX 4060 8GB</div>
     <div class="spec-tag">32GB RAM</div>
@@ -476,395 +518,249 @@
   </div>
 </div>
 
-<!-- ═══════════════════ COMUNIDAD ═══════════════════ -->
+<!-- COMUNIDAD -->
 <div style="background: linear-gradient(135deg, rgba(110,168,254,0.06), rgba(196,181,253,0.06)); border: 1px solid var(--border-accent); border-radius: 16px; padding: 24px 32px; margin: 24px auto; max-width: 820px; text-align: center;">
-  <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; text-transform: uppercase;">🙌 Guía gratuita y open-source para la comunidad</p>
-  <p style="font-size: 15px; color: var(--text); margin-bottom: 14px;">Esta guía fue creada para ayudar a desarrolladores hispanohablantes a configurar su entorno de trabajo ideal. Si te sirvió, compartila en tus redes o dejá una ⭐ en el <a href="https://github.com/p5Patricio/guia-dual-boot-ubuntu-windows11" style="color: var(--accent-cyan); text-decoration: underline;">repo de GitHub</a>.</p>
-  <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-    <span style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--accent-green);">💻 Desarrollo</span>
-    <span style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--accent-cyan);">🎮 Gaming</span>
-    <span style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--accent-purple);">🧠 AI Local</span>
-    <span style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--accent-orange);">⚡ Rendimiento</span>
-  </div>
+  <p style="font-size: 15px; color: var(--text);" data-lang="es">Guía open-source. ¿Te sirvió? ⭐ en el <a href="https://github.com/p5Patricio/guia-dual-boot-ubuntu-windows11" style="color: var(--accent-cyan);">repo</a>.</p>
+  <p style="font-size: 15px; color: var(--text);" data-lang="en">Open-source guide. Did it help? ⭐ on the <a href="https://github.com/p5Patricio/guia-dual-boot-ubuntu-windows11" style="color: var(--accent-cyan);">repo</a>.</p>
 </div>
 
-<!-- ═══════════════════ TOC ═══════════════════ -->
+<!-- TOC -->
 <div class="toc container">
-  <h2>Contenido</h2>
+  <h2 data-lang="es">Contenido</h2><h2 data-lang="en">Contents</h2>
   <ol>
-    <li>Preparación desde Windows (antes de tocar nada)</li>
-    <li>Crear USB booteable de Ubuntu 26.04 LTS</li>
-    <li>Configurar BIOS / UEFI</li>
-    <li>Particionar el disco para dual boot</li>
-    <li>Instalar Ubuntu 26.04 LTS</li>
-    <li>Primer arranque y configuración base</li>
-    <li>Drivers NVIDIA + CUDA (rendimiento máximo)</li>
-    <li>Optimización del sistema — Velocidad extrema</li>
-    <li>Instalar tu stack de desarrollo</li>
-    <li>AI Stack: Ollama, Whisper, modelos locales</li>
-    <li>Configurar GRUB y flujo de dual boot</li>
-    <li>Productividad, dotfiles y troubleshooting</li>
+    <li><span data-lang="es">Preparación Windows</span><span data-lang="en">Windows Prep</span></li>
+    <li><span data-lang="es">USB booteable</span><span data-lang="en">Bootable USB</span></li>
+    <li><span data-lang="es">BIOS / UEFI</span><span data-lang="en">BIOS / UEFI</span></li>
+    <li><span data-lang="es">Particiones</span><span data-lang="en">Partitions</span></li>
+    <li><span data-lang="es">Instalar Ubuntu</span><span data-lang="en">Install Ubuntu</span></li>
+    <li><span data-lang="es">Primer arranque</span><span data-lang="en">First boot</span></li>
+    <li><span data-lang="es">NVIDIA + CUDA</span><span data-lang="en">NVIDIA + CUDA</span></li>
+    <li><span data-lang="es">Optimización</span><span data-lang="en">Optimization</span></li>
+    <li><span data-lang="es">Dev stack</span><span data-lang="en">Dev stack</span></li>
+    <li><span data-lang="es">AI local</span><span data-lang="en">Local AI</span></li>
+    <li><span data-lang="es">GRUB + dual boot</span><span data-lang="en">GRUB + dual boot</span></li>
+    <li><span data-lang="es">Troubleshooting</span><span data-lang="en">Troubleshooting</span></li>
   </ol>
 </div>
 
-<!-- ═══════════════════ FASE 1 ═══════════════════ -->
+<!-- FASE 1 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">01</div>
-    <h2>Preparación desde Windows</h2>
+    <h2 data-lang="es">Preparación desde Windows</h2><h2 data-lang="en">Preparation from Windows</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">💾</span> Respalda TODO lo importante</h3>
-    <p>Antes de tocar particiones, respalda archivos críticos a un disco externo o la nube. Proyectos, configuraciones de VS Code/Cursor, SSH keys, y archivos personales.</p>
+    <h3><span class="icon">💾</span><span data-lang="es"> Respalda</span><span data-lang="en"> Back up</span></h3>
+    <p data-lang="es">Respalda a disco externo o nube antes de particionar.</p><p data-lang="en">Back up to external drive or cloud before partitioning.</p>
     <div class="danger">
-      <strong>⚠ No te saltes esto</strong>
-      Un error en el particionado puede borrar datos. Respaldar es no negociable.
+      <strong data-lang="es">⚠ No te saltes esto</strong>
+      <strong data-lang="en">⚠ Don't skip this</strong>
+      <span data-lang="es">Un error puede borrar datos.</span>
+      <span data-lang="en">An error can erase data.</span>
     </div>
   </div>
 
   <div class="step">
-    <h3><span class="icon">📏</span> Libera espacio en tu disco (SSD/NVMe)</h3>
-    <p>Necesitas mínimo <strong>120GB</strong> libres para Ubuntu (recomendado 200GB para tener holgura con contenedores y repos). Desde Windows:</p>
-    <pre><code># Abre Disk Management (Win + R → diskmgmt.msc)
-# Click derecho en tu partición C: → "Shrink Volume"
-# Ingresa el espacio a reducir en MB:
-#   200GB = 204800 MB
-# Deja el espacio como "Unallocated" — NO crear partición nueva</code></pre>
-    <div class="warning">
-      <strong>Nota importante</strong>
-      Si Windows no te deja shrinkear suficiente, desactiva temporalmente la hibernación con <code>powercfg /h off</code> (como admin) y reduce los puntos de restauración de System Restore. <strong>NO ejecutes defrag en SSD/NVMe</strong> — es para discos mecánicos y solo desgasta tu unidad.
-    </div>
-  </div>
+    <h3><span class="icon">📏</span><span data-lang="es"> Libera espacio</span><span data-lang="en"> Free up space</span></h3>
+    <p data-lang="es">Mínimo <strong>120GB</strong> (ideal 200GB). Dejá como <strong>Unallocated</strong>.</p><p data-lang="en">Minimum <strong>120GB</strong> (ideal 200GB). Leave as <strong>Unallocated</strong>.</p>
+    <pre data-lang="es"><code># Win + R → diskmgmt.msc
+# C: → Shrink Volume → 204800 MB (200GB)
+# NO creés nueva partición
 
-  <div class="step">
-    <h3><span class="icon">⚡</span> Desactiva Fast Startup</h3>
-    <p>Esto es <strong>crítico</strong>. Fast Startup bloquea particiones NTFS y causa corrupción cuando Linux intenta leerlas.</p>
-    <pre><code># Panel de Control → Opciones de energía → 
-# "Elegir el comportamiento de los botones de inicio/apagado"
-# → "Cambiar la configuración actualmente no disponible"
-# → Desmarca "Activar inicio rápido"
+# Si no podés shrinkear:
+powercfg /h off</code></pre>
+    <pre data-lang="en"><code># Win + R → diskmgmt.msc
+# C: → Shrink Volume → 204800 MB (200GB)
+# Do NOT create a new partition
 
-# O por PowerShell (Admin):
+# If you can't shrink:
 powercfg /h off</code></pre>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🔐</span> Verifica UEFI y apunta tu BitLocker key</h3>
-    <p>Tu PC con Windows 11 ya está en UEFI, pero confirma:</p>
-    <pre><code># PowerShell o CMD:
-msinfo32
-# Busca "BIOS Mode" → debe decir "UEFI"
-# Busca "Secure Boot State" → anota si está On u Off</code></pre>
-    <p>Si tienes BitLocker activo, ve a <a href="https://account.microsoft.com/devices/recoverykey">account.microsoft.com/devices/recoverykey</a> y guarda la recovery key.</p>
+    <h3><span class="icon">⚡</span><span data-lang="es"> Fast Startup off</span><span data-lang="en"> Fast Startup off</span></h3>
+    <p data-lang="es">Bloquea NTFS y causa corrupción en Linux.</p><p data-lang="en">Locks NTFS and causes corruption in Linux.</p>
+    <pre><code>powercfg /h off</code></pre>
+  </div>
+
+  <div class="step">
+    <h3><span class="icon">🔐</span><span data-lang="es"> UEFI + BitLocker</span><span data-lang="en"> UEFI + BitLocker</span></h3>
+    <pre data-lang="es"><code>msinfo32
+# BIOS Mode → UEFI
+# Secure Boot → anotá On/Off</code></pre>
+    <pre data-lang="en"><code>msinfo32
+# BIOS Mode → UEFI
+# Secure Boot → note On/Off</code></pre>
+    <p data-lang="es"><a href="https://account.microsoft.com/devices/recoverykey">BitLocker recovery key</a></p><p data-lang="en"><a href="https://account.microsoft.com/devices/recoverykey">BitLocker recovery key</a></p>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 2 ═══════════════════ -->
+<!-- FASE 2 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">02</div>
-    <h2>Crear USB Booteable de Ubuntu 26.04 LTS</h2>
+    <h2 data-lang="es">Crear USB Booteable</h2><h2 data-lang="en">Create Bootable USB</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">📥</span> Descarga la ISO</h3>
-    <p>Ve a <a href="https://ubuntu.com/download/desktop">ubuntu.com/download/desktop</a> y descarga <strong>Ubuntu 26.04 LTS Desktop</strong>. La ISO es de ~3.5GB.</p>
-    <div class="info">
-      <strong>¿Por qué Ubuntu 26.04 LTS?</strong>
-      Ubuntu LTS (Long Term Support) recibe actualizaciones de seguridad por 5 años. La versión 26.04 trae el kernel más reciente, mejor soporte para hardware nuevo (RTX 4060), GNOME mejorado, y snap/flatpak preinstalados para instalar apps con un click.
-    </div>
+    <h3><span class="icon">📥</span><span data-lang="es"> ISO</span><span data-lang="en"> ISO</span></h3>
+    <p data-lang="es"><a href="https://ubuntu.com/download/desktop">ubuntu.com/download/desktop</a> — Ubuntu 26.04 LTS (~3.5GB).</p><p data-lang="en"><a href="https://ubuntu.com/download/desktop">ubuntu.com/download/desktop</a> — Ubuntu 26.04 LTS (~3.5GB).</p>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🔧</span> Flashea la USB</h3>
-    <p>Necesitas una USB de 4GB+ (se borrará todo). Usa <strong>Rufus</strong> o <strong>BalenaEtcher</strong>:</p>
-    <pre><code># Opción A — Rufus:
-# 1. Descarga Rufus: rufus.ie
-# 2. Selecciona tu USB
-# 3. Selecciona la ISO de Ubuntu 26.04 LTS
-# 4. Partition scheme: GPT
-# 5. Target system: UEFI (non CSM)
-# 6. File system: default
-# 7. Click "START"
-
-# Opción B — BalenaEtcher (más simple):
-# Descárgalo desde balena.io, selecciona la ISO, tu USB, y listo.</code></pre>
+    <h3><span class="icon">🔧</span><span data-lang="es"> Flash</span><span data-lang="en"> Flash</span></h3>
+    <p data-lang="es">Rufus (recomendado) o BalenaEtcher. USB 4GB+.</p><p data-lang="en">Rufus (recommended) or BalenaEtcher. 4GB+ USB.</p>
+    <pre><code># Rufus: GPT + UEFI (non CSM)
+# BalenaEtcher: ISO + USB</code></pre>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 3 ═══════════════════ -->
+<!-- FASE 3 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">03</div>
-    <h2>Configurar BIOS / UEFI</h2>
+    <h2 data-lang="es">Configurar BIOS / UEFI</h2><h2 data-lang="en">Configure BIOS / UEFI</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">⚙️</span> Entra al BIOS</h3>
-    <p>Reinicia y presiona la tecla de tu motherboard (<code>DEL</code>, <code>F2</code>, o <code>F12</code>). Ajusta:</p>
+    <h3><span class="icon">⚙️</span><span data-lang="es"> BIOS</span><span data-lang="en"> BIOS</span></h3>
+    <p data-lang="es">Reiniciá, presioná <code>DEL/F2/F12</code>:</p><p data-lang="en">Restart, press <code>DEL/F2/F12</code>:</p>
     <ul class="checklist">
-      <li><strong>Secure Boot → Disabled</strong> — Simplifica enormemente la instalación de drivers NVIDIA propietarios. Ubuntu soporta Secure Boot con MOK, pero para un primer setup es más limpio desactivarlo.</li>
-      <li><strong>Boot Mode → UEFI</strong> (no Legacy/CSM).</li>
-      <li><strong>Boot Order</strong> — Pon tu USB primero temporalmente, o usa el Boot Menu (F12) al reiniciar.</li>
-      <li><strong>Fast Boot en BIOS → Disabled</strong> — A nivel de firmware, diferente al Fast Startup de Windows.</li>
+      <li><strong>Secure Boot → Disabled</strong></li>
+      <li><strong>Boot Mode → UEFI</strong></li>
+      <li><span data-lang="es"><strong>Boot Order → USB</strong> o F12 Boot Menu</span><span data-lang="en"><strong>Boot Order → USB</strong> or F12 Boot Menu</span></li>
+      <li><strong>Fast Boot → Disabled</strong></li>
     </ul>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 4 ═══════════════════ -->
+<!-- FASE 4 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">04</div>
-    <h2>Esquema de Particiones</h2>
+    <h2 data-lang="es">Esquema de Particiones</h2><h2 data-lang="en">Partition Scheme</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">💿</span> Layout recomendado para tu disco</h3>
-    <p>Asumiendo ~200GB de espacio libre para Ubuntu, esta es la distribución óptima:</p>
+    <h3><span class="icon">💿</span><span data-lang="es"> Layout</span><span data-lang="en"> Layout</span></h3>
+    <p data-lang="es">~200GB para Ubuntu:</p><p data-lang="en">~200GB for Ubuntu:</p>
 
-    <div class="partition-diagram">
-      <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 8px;">Disco completo (ejemplo 1TB NVMe)</div>
-      <div class="partition-bar">
-        <div class="seg efi">EFI</div>
-        <div class="seg windows">Windows (NTFS)</div>
-        <div class="seg ubuntu-root">Ubuntu / (ext4)</div>
-        <div class="seg swap">SWAP</div>
-        <div class="seg home">/home</div>
-      </div>
-      <div class="partition-legend">
-        <span><span class="dot" style="background: var(--accent-purple)"></span> EFI — ya existe (~500MB)</span>
-        <span><span class="dot" style="background: var(--accent-blue)"></span> Windows — tu partición actual</span>
-        <span><span class="dot" style="background: var(--accent-green)"></span> / (root) — 120GB ext4</span>
-        <span><span class="dot" style="background: var(--accent-orange)"></span> swap — 8GB</span>
-        <span><span class="dot" style="background: var(--accent-cyan)"></span> /home — resto (~72GB) ext4</span>
-      </div>
-    </div>
+    <pre><code>EFI ~500MB | Windows (NTFS) | / 120GB ext4 | swap 8GB | /home ~72GB ext4</code></pre>
 
-    <div class="comparison">
-      <div class="col recommended">
-        <h4>✦ Opción A: Automático (Recomendado)</h4>
-        <p style="font-size: 14px;">Deja que el instalador de Ubuntu use el espacio libre automáticamente. Selecciona "Install alongside Windows Boot Manager" y Ubuntu manejará las particiones. Es la opción más segura para principiantes.</p>
-      </div>
-      <div class="col alternative">
-        <h4>✦ Opción B: Manual</h4>
-        <p style="font-size: 14px;">Si quieres control total, crea manualmente: <code>/</code> 120GB ext4, <code>swap</code> 8GB, <code>/home</code> resto ext4. NO crees EFI nueva — usa la existente de Windows con mount point <code>/boot/efi</code> y <strong>NO la formatees</strong>.</p>
-      </div>
-    </div>
+    <p data-lang="es"><strong>Auto:</strong> "Install alongside Windows Boot Manager". <strong>Manual:</strong> <code>/</code> 120GB ext4, <code>swap</code> 8GB, <code>/home</code> resto ext4. EFI en <code>/boot/efi</code> sin formatear.</p><p data-lang="en"><strong>Auto:</strong> "Install alongside Windows Boot Manager". <strong>Manual:</strong> <code>/</code> 120GB ext4, <code>swap</code> 8GB, <code>/home</code> remaining ext4. EFI at <code>/boot/efi</code> without formatting.</p>
 
-    <div class="tip">
-      <strong>¿Por qué ext4?</strong>
-      Ubuntu usa ext4 por defecto: probado en millones de sistemas, rendimiento excelente, y herramientas de recuperación maduras. Si prefieres btrfs (como en Fedora), podés seleccionarlo manualmente en el instalador, pero ext4 es más estable para un primer setup en Ubuntu.
-    </div>
-
-    <div class="tip">
-      <strong>¿Por qué /home separado?</strong>
-      Si reinstalas Ubuntu o cambias de distro, tu <code>/home</code> (proyectos, dotfiles, configs) permanece intacto. Solo formateas <code>/</code> y listo.
-    </div>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 5 ═══════════════════ -->
+
+<!-- FASE 5 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">05</div>
-    <h2>Instalar Ubuntu 26.04 LTS</h2>
+    <h2 data-lang="es">Instalar Ubuntu 26.04 LTS</h2><h2 data-lang="en">Install Ubuntu 26.04 LTS</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🚀</span> Bootea desde la USB</h3>
-    <p>Reinicia con la USB conectada. En el menú de GRUB selecciona <strong>"Try or Install Ubuntu"</strong>. Se cargará el entorno live de Ubuntu.</p>
-    <div class="info">
-      <strong>Nota sobre la gráfica</strong>
-      En el live USB probablemente arranque con los drivers open-source <code>nouveau</code>. La resolución puede verse rara o tener glitches — es normal. Los drivers NVIDIA propietarios los instalamos después.
-    </div>
+    <h3><span class="icon">🚀</span><span data-lang="es"> Bootea USB</span><span data-lang="en"> Boot USB</span></h3>
+    <p data-lang="es">Seleccioná <strong>"Try or Install Ubuntu"</strong>. Live usa nouveau.</p><p data-lang="en">Select <strong>"Try or Install Ubuntu"</strong>. Live uses nouveau.</p>
   </div>
 
   <div class="step">
-    <h3><span class="icon">📋</span> Ejecuta el instalador (Ubiquity/Calamares)</h3>
-    <p>Haz click en "Install Ubuntu" en el escritorio. Sigue estos pasos:</p>
+    <h3><span class="icon">📋</span><span data-lang="es"> Instalador</span><span data-lang="en"> Installer</span></h3>
     <ul class="checklist">
-      <li><strong>Idioma</strong> — Español o tu preferencia.</li>
-      <li><strong>Teclado</strong> — Latinoamericano o US según tu teclado.</li>
-      <li><strong>Conexión WiFi</strong> — Conectate para descargar actualizaciones durante la instalación.</li>
-      <li><strong>Tipo de instalación</strong> — Selecciona <strong>"Install alongside Windows Boot Manager"</strong> para dual boot automático, o <strong>"Something else"</strong> para particionado manual.</li>
+      <li><span data-lang="es">Idioma/Teclado/WiFi</span><span data-lang="en">Language/Keyboard/WiFi</span></li>
+      <li><span data-lang="es">"Install alongside Windows Boot Manager" o "Something else"</span><span data-lang="en">"Install alongside Windows Boot Manager" or "Something else"</span></li>
     </ul>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🔨</span> Configuración de particiones manual</h3>
-    <p>Si elegiste "Something else", en la pantalla de particionado:</p>
+    <h3><span class="icon">🔨</span><span data-lang="es"> Manual</span><span data-lang="en"> Manual</span></h3>
+    <p data-lang="es">NO toques EFI ni NTFS de Windows.</p><p data-lang="en">Do NOT touch EFI or Windows NTFS.</p>
     <ul class="checklist">
-      <li>Verás la partición EFI existente (~500MB, FAT32) y la partición NTFS de Windows. <strong>NO toques ninguna de estas.</strong></li>
-      <li>Selecciona el <strong>espacio libre</strong> ("free space") que creaste en el paso 1.</li>
-      <li>Crea las particiones:
-        <br><br>
-        <code>/</code> — 120GB, filesystem <strong>ext4</strong>, mount point <code>/</code><br>
-        <code>swap</code> — 8GB (8192MB)<br>
-        <code>/home</code> — resto del espacio libre, filesystem <strong>ext4</strong>, mount point <code>/home</code>
-      </li>
-      <li>Para el <strong>EFI</strong>: selecciona la partición EFI existente y asígnale <code>/boot/efi</code>. <strong>NO la formatees</strong> — solo asigna el mount point.</li>
+      <li><code>/</code> — 120GB ext4</li>
+      <li><code>swap</code> — 8GB</li>
+      <li><code>/home</code> — resto ext4</li>
+      <li><span data-lang="es">EFI → <code>/boot/efi</code>, NO formatear</span><span data-lang="en">EFI → <code>/boot/efi</code>, do NOT format</span></li>
     </ul>
     <div class="danger">
-      <strong>⚠ Verificación final antes de instalar</strong>
-      Revisa que las particiones de Windows digan "preserve" o "no change" y que SOLO se creen/formateen las particiones nuevas en el espacio libre. Si ves "format" en una partición de Windows, PARA y revisa.
+      <strong>⚠ Verificá</strong>
+      <span data-lang="es">Windows debe decir "preserve".</span>
+      <span data-lang="en">Windows must say "preserve".</span>
     </div>
   </div>
 
   <div class="step">
-    <h3><span class="icon">👤</span> Crea tu usuario</h3>
-    <p>Configura tu nombre de usuario y contraseña. Marca la opción de hacerte administrador (acceso a <code>sudo</code>). Ubuntu no usa root directo — todo va por sudo.</p>
-    <p>Click en <strong>"Continue"</strong> y espera ~15-20 minutos. Cuando termine, reinicia y <strong>remueve la USB</strong>.</p>
+    <h3><span class="icon">👤</span><span data-lang="es"> Usuario</span><span data-lang="en"> User</span></h3>
+    <p data-lang="es">Usuario + contraseña + admin. ~15-20 min. Reiniciá, <strong>sacá USB</strong>.</p><p data-lang="en">User + password + admin. ~15-20 min. Restart, <strong>remove USB</strong>.</p>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 6 ═══════════════════ -->
+<!-- FASE 6 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">06</div>
-    <h2>Primer arranque y configuración base</h2>
+    <h2 data-lang="es">Primer arranque</h2><h2 data-lang="en">First boot</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🖥️</span> Primer login en Ubuntu 26.04 LTS</h3>
-    <p>GRUB debería aparecer mostrando Ubuntu y Windows. Selecciona Ubuntu. Abre una terminal (<code>Ctrl + Alt + T</code>) y actualiza:</p>
-    <pre><code># Actualiza la lista de paquetes e instala actualizaciones
-sudo apt update && sudo apt upgrade -y
-
-# Instala herramientas esenciales que no vienen por defecto
+    <h3><span class="icon">🖥️</span><span data-lang="es"> Login + repos</span><span data-lang="en"> Login + repos</span></h3>
+    <p data-lang="es">Ubuntu en GRUB. Terminal (<code>Ctrl + Alt + T</code>):</p><p data-lang="en">Ubuntu in GRUB. Terminal (<code>Ctrl + Alt + T</code>):</p>
+    <pre><code>sudo apt update && sudo apt upgrade -y
 sudo apt install -y build-essential curl wget git vim htop
-
-# Reinicia después de actualizar (puede incluir kernel nuevo)
+sudo add-apt-repository -y universe multiverse restricted
+sudo apt update
+sudo apt install -y ubuntu-restricted-extras vainfo libva-utils ffmpeg
 sudo reboot</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">📦</span> Habilita repositorios adicionales</h3>
-    <p>Ubuntu tiene repositorios "restricted", "universe" y "multiverse" que contienen software adicional:</p>
-    <pre><code># Habilita universe, multiverse y restricted (si no están activos)
-sudo add-apt-repository -y universe
-sudo add-apt-repository -y multiverse
-sudo add-apt-repository -y restricted
-
-# Actualiza repos
-sudo apt update</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🎬</span> Codecs multimedia</h3>
-    <p>Para videos, música y contenido web sin fricción:</p>
-    <pre><code># Codecs multimedia completos (incluye patentes restrictivas)
-sudo apt install -y ubuntu-restricted-extras
-
-# Soporte VA-API para NVIDIA (aceleración de video por hardware)
-sudo apt install -y vainfo libva-utils
-
-# FFmpeg completo
-sudo apt install -y ffmpeg</code></pre>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 7 ═══════════════════ -->
+<!-- FASE 7 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">07</div>
-    <h2>Drivers NVIDIA + CUDA (rendimiento máximo)</h2>
+    <h2 data-lang="es">NVIDIA + CUDA</h2><h2 data-lang="en">NVIDIA + CUDA</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🟢</span> Instala los drivers propietarios de NVIDIA</h3>
-    <p>Este es el paso más importante para tu RTX 4060. Ubuntu tiene una herramienta oficial:</p>
-    <pre><code># Ver qué drivers recomienda Ubuntu para tu GPU
-ubuntu-drivers devices
-
-# Instala el driver recomendado automáticamente
+    <h3><span class="icon">🟢</span><span data-lang="es"> Drivers + CUDA</span><span data-lang="en"> Drivers + CUDA</span></h3>
+    <pre data-lang="es"><code>ubuntu-drivers devices
 sudo ubuntu-drivers autoinstall
+sudo reboot
 
-# O instala manualmente el último driver disponible:
-# sudo apt install -y nvidia-driver-580
-
-# Reinicia
-sudo reboot</code></pre>
-    <div class="tip">
-      <strong>¿Cuál driver elegir?</strong>
-      <code>ubuntu-drivers autoinstall</code> instala el driver recomendado y probado para tu hardware. Si quieres el último (a veces con mejor soporte para CUDA reciente), busca la versión más alta con <code>ubuntu-drivers devices</code> e instálala manualmente.
-    </div>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">✅</span> Verifica la instalación</h3>
-    <p>Después de reiniciar:</p>
-    <pre><code># Verifica que el driver cargó
 nvidia-smi
-# Deberías ver tu RTX 4060, driver version, CUDA version
-
-# Verifica Vulkan (crítico para rendimiento gráfico)
-sudo apt install -y vulkan-tools
+sudo apt install -y vulkan-tools nvidia-cuda-toolkit
 vulkaninfo | head -20
+lsmod | grep nouveau  # vacío = OK</code></pre>
+    <pre data-lang="en"><code>ubuntu-drivers devices
+sudo ubuntu-drivers autoinstall
+sudo reboot
 
-# Verifica que Nouveau está bloqueado (no debe mostrar nada)
-lsmod | grep nouveau</code></pre>
+nvidia-smi
+sudo apt install -y vulkan-tools nvidia-cuda-toolkit
+vulkaninfo | head -20
+lsmod | grep nouveau  # empty = OK</code></pre>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🧪</span> CUDA Toolkit para desarrollo</h3>
-    <p>Para compilar con CUDA necesitas el toolkit completo:</p>
-    <pre><code># Instala CUDA toolkit desde los repos de Ubuntu
-sudo apt install -y nvidia-cuda-toolkit
-
-# Verifica instalación
-nvcc --version
-
-# Agrega al PATH si es necesario:
-echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
-source ~/.bashrc</code></pre>
-    <div class="tip">
-      <strong>Para tu stack de IA ligero</strong>
-      Ollama y Whisper usan CUDA runtime, no necesitan nvcc. Con los drivers NVIDIA propietarios ya tienes lo necesario para la mayoría de workloads. El toolkit completo solo lo necesitás si compilás proyectos nativos con CUDA.
-    </div>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🚀</span> Optimización NVIDIA para Wayland</h3>
-    <p>Ubuntu 26.04 usa Wayland por defecto en GNOME. Activa KMS y parámetros de rendimiento:</p>
-    <pre><code># Activa kernel mode setting (obligatorio para Wayland + NVIDIA)
-sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia-drm.modeset=1"/g' /etc/default/grub
-
-# Actualiza GRUB
-sudo update-grub
-
-# Reinicia
-sudo reboot</code></pre>
+    <h3><span class="icon">🚀</span><span data-lang="es"> Wayland</span><span data-lang="en"> Wayland</span></h3>
+    <pre><code>sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nvidia-drm.modeset=1"/g' /etc/default/grub
+sudo update-grub && sudo reboot</code></pre>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 8 ═══════════════════ -->
+<!-- FASE 8 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">08</div>
-    <h2>Optimización del sistema — Velocidad extrema</h2>
+    <h2 data-lang="es">Optimización</h2><h2 data-lang="en">Optimization</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">⚡</span> zram ya está activo (no toques)</h3>
-    <p>Ubuntu configura <strong>zram</strong> por defecto desde hace varias versiones: swap comprimido en RAM que es más rápido que swap en disco y no desgasta tu NVMe. No necesitas crear swap file adicional a menos que quieras hibernar.</p>
-    <pre><code># Verifica que zram está activo
-swapon --show
-# Debe mostrar /dev/zram0
+    <h3><span class="icon">🐧</span><span data-lang="es"> Kernel + zram + GNOME</span><span data-lang="en"> Kernel + zram + GNOME</span></h3>
+    <pre data-lang="es"><code>swapon --show  # /dev/zram0
 
-# Si quieres ajustar el tamaño (opcional):
-# Por defecto usa ~50% de tu RAM (16GB en tu caso).
-# Está bien así para 32GB.</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🐧</span> Kernel tweaks para latencia baja</h3>
-    <p>Para un sistema de desarrollo súper responsivo:</p>
-    <pre><code># Editor de parámetros del kernel
 sudo nano /etc/sysctl.d/99-performance.conf
-
-# Pega esto:
 vm.swappiness=10
 vm.vfs_cache_pressure=50
 vm.dirty_ratio=15
@@ -872,393 +768,201 @@ vm.dirty_background_ratio=5
 kernel.sched_latency_ns=1000000
 kernel.sched_min_granularity_ns=100000
 kernel.sched_wakeup_granularity_ns=50000
-
-# Aplica
 sudo sysctl --system
 
-# Scheduler I/O para NVMe (mq-deadline o none)
-# Verifica cuál usas:
-cat /sys/block/nvme0n1/queue/scheduler
-# Si dice "none", está bien (NVMe maneja su propia cola eficientemente).</code></pre>
-  </div>
+cat /sys/block/nvme0n1/queue/scheduler  # "none" OK
 
-  <div class="step">
-    <h3><span class="icon">🎨</span> GNOME — Ajustes de rendimiento</h3>
-    <ul class="checklist">
-      <li><strong>Desactiva animaciones:</strong> Settings → Accessibility → Seeing → Animation → Off. Las animaciones de GNOME consumen recursos y no aportan nada a la productividad.</li>
-      <li><strong>Extensiones útiles:</strong> Instala <code>gnome-tweaks</code> y la extensión <strong>Dash to Dock</strong> para un dock más eficiente.</li>
-      <li><strong>Tiling:</strong> Ubuntu 26.04 incluye soporte de tiling nativo en GNOME. Activálo en Settings → Multitasking → Tiling.</li>
-      <li><strong>Wayland vs X11:</strong> GNOME en Wayland funciona excelente con NVIDIA en Ubuntu 26.04. Si tienes glitches raros, cambia a X11 desde la pantalla de login (esquina inferior derecha).</li>
-    </ul>
+# GNOME: Animations Off, Dash to Dock, Tiling en Multitasking
+# Glitches → X11 en login</code></pre>
+    <pre data-lang="en"><code>swapon --show  # /dev/zram0
+
+sudo nano /etc/sysctl.d/99-performance.conf
+vm.swappiness=10
+vm.vfs_cache_pressure=50
+vm.dirty_ratio=15
+vm.dirty_background_ratio=5
+kernel.sched_latency_ns=1000000
+kernel.sched_min_granularity_ns=100000
+kernel.sched_wakeup_granularity_ns=50000
+sudo sysctl --system
+
+cat /sys/block/nvme0n1/queue/scheduler  # "none" OK
+
+# GNOME: Animations Off, Dash to Dock, Tiling in Multitasking
+# Glitches → X11 on login</code></pre>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 9 ═══════════════════ -->
+<!-- FASE 9 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">09</div>
-    <h2>Instalar tu stack de desarrollo</h2>
+    <h2 data-lang="es">Dev stack</h2><h2 data-lang="en">Dev stack</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🐍</span> Python + uv (el package manager moderno)</h3>
-    <pre><code># Python ya viene en Ubuntu 26.04
-python3 --version
-
-# Instala herramientas de build
-sudo apt install -y python3-pip python3-venv python3-dev gcc g++ make
-
-# Instala uv (reemplaza pip+venv+poetry con velocidad extrema)
+    <h3><span class="icon">🐍</span><span data-lang="es"> Python + Node + Go + Editores</span><span data-lang="en"> Python + Node + Go + Editors</span></h3>
+    <pre><code>sudo apt install -y python3-pip python3-venv python3-dev gcc g++ make
 curl -LsSf https://astral.sh/uv/install.sh | sh
-source ~/.bashrc
 
-# uv crea entornos aislados por proyecto en milisegundos:
-# uv init mi-proyecto
-# cd mi-proyecto && uv add fastapi uvicorn sqlalchemy
-# uv run python main.py</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">📦</span> Node.js, pnpm, Deno</h3>
-    <pre><code># fnm (Fast Node Manager) — más rápido que nvm
-curl -fsSL https://fnm.vercel.app/install | bash
-source ~/.bashrc
-fnm install --lts
-fnm use lts-latest
-node --version
-
-# pnpm (el package manager más rápido para Node)
+curl -fsSL https://fnm.vercel.app/install | bash && source ~/.bashrc
+fnm install --lts && fnm use lts-latest
 curl -fsSL https://get.pnpm.io/install.sh | sh
-source ~/.bashrc
 
-# Deno (runtime moderno, ideal para tooling)
-curl -fsSL https://deno.land/install.sh | sh
-echo 'export DENO_INSTALL="$HOME/.deno"' >> ~/.bashrc
-echo 'export PATH="$DENO_INSTALL/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-deno --version</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🐹</span> Go</h3>
-    <pre><code># Go desde snap (más actualizado que apt)
 sudo snap install go --classic
-go version
 
-# O desde apt (más estable):
-# sudo apt install -y golang-go
-
-# Configura GOPATH si quieres (opcional en Go moderno)
-echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc</code></pre>
+sudo snap install code --classic
+sudo apt install -y git-delta bat eza fd-find ripgrep zoxide htop btop fzf
+echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
+echo 'eval "$(fzf --bash)"' >> ~/.bashrc
+source ~/.bashrc</code></pre>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🐳</span> Docker</h3>
-    <pre><code># Elimina versiones viejas si existen:
-sudo apt remove -y docker docker-engine docker.io containerd runc
-
-# Instala dependencias
-sudo apt install -y ca-certificates curl gnupg lsb-release
-
-# Agrega la llave GPG oficial de Docker
+    <h3><span class="icon">🐳</span><span data-lang="es"> Docker + NVIDIA</span><span data-lang="en"> Docker + NVIDIA</span></h3>
+    <pre><code>sudo apt install -y ca-certificates curl gnupg lsb-release
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-# Agrega el repositorio de Docker
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Instala Docker
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable --now docker && sudo usermod -aG docker $USER && newgrp docker
 
-# Inicia y habilita Docker
-sudo systemctl start docker
-sudo systemctl enable docker
-
-# Agrégate al grupo docker
-sudo usermod -aG docker $USER
-newgrp docker
-
-# Verifica
-docker run hello-world
-
-# NVIDIA Container Toolkit (GPU en contenedores)
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
 curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-sudo apt update
-sudo apt install -y nvidia-container-toolkit
-sudo nvidia-ctk runtime configure --runtime=docker
+sudo apt update && sudo apt install -y nvidia-container-toolkit && sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 
-# Test GPU en Docker
+# Test GPU
 docker run --rm --gpus all nvidia/cuda:12.6.0-base-ubuntu22.04 nvidia-smi</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">✏️</span> Editores y herramientas dev esenciales</h3>
-    <pre><code># Git (configúralo)
-git config --global user.name "TuNombre"
-git config --global user.email "tu-email@example.com"
-
-# VS Code (vía snap — siempre actualizado)
-sudo snap install code --classic
-
-# Cursor: descarga el .AppImage desde cursor.com
-# chmod +x cursor-*.AppImage && ./cursor-*.AppImage
-
-# Claude Code (nativo en Linux)
-# Descarga e instala desde: https://claude.ai/install
-# O:
-# curl -fsSL https://claude.ai/install.sh | sh
-
-# Herramientas CLI modernas (cambian tu vida en terminal)
-sudo apt install -y git-delta bat eza fd-find ripgrep zoxide htop btop fzf
-
-# zoxide (cd inteligente) — inicialízalo
-echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
-
-# fzf (fuzzy finder) — inicialízalo
-echo 'eval "$(fzf --bash)"' >> ~/.bashrc
-
-source ~/.bashrc</code></pre>
-    <div class="tip">
-      <strong>Tu nueva terminal experience</strong>
-      <code>bat</code> = cat con syntax highlighting, <code>eza</code> = ls con iconos y git, <code>fd</code> = find instantáneo, <code>ripgrep</code> = grep 10x más rápido, <code>zoxide</code> = cd que aprende, <code>btop</code> = monitor de recursos visual, <code>fzf</code> = búsqueda fuzzy en todo.
-    </div>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 10 ═══════════════════ -->
+
+<!-- FASE 10 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">10</div>
-    <h2>AI Stack: Ollama, Whisper, modelos locales</h2>
+    <h2 data-lang="es">AI local</h2><h2 data-lang="en">Local AI</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🦙</span> Ollama (IA local ligera)</h3>
-    <pre><code># Instalación oficial
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Verifica que detecte tu GPU (RTX 4060)
-ollama --version
-nvidia-smi
-
-# Modelos eficientes para 8GB VRAM (tu caso)
-ollama pull gemma3:4b
-ollama pull qwen3:4b
-ollama pull llama3.2:3b
-
-# Test
-ollama run gemma3:4b "Resume los beneficios de Ubuntu para desarrolladores"
-
-# Ollama corre como servicio systemd:
-sudo systemctl status ollama
-# API compatible con OpenAI en http://localhost:11434</code></pre>
-    <div class="tip">
-      <strong>VRAM en Linux vs Windows</strong>
-      En Linux sin compositor pesado, tu 4060 tendrá ~7.5GB de VRAM disponible vs ~6.5-7GB en Windows. Esa diferencia real te permite correr modelos ligeros más cómodamente.
-    </div>
+    <h3><span class="icon">🦙</span><span data-lang="es"> Ollama</span><span data-lang="en"> Ollama</span></h3>
+    <pre><code>curl -fsSL https://ollama.com/install.sh | sh
+ollama pull gemma3:4b qwen3:4b llama3.2:3b
+# API: http://localhost:11434</code></pre>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🎤</span> Whisper (Faster-Whisper con CUDA)</h3>
-    <pre><code># Entorno dedicado con uv
-mkdir ~/ai-tools && cd ~/ai-tools
-uv init whisper-env && cd whisper-env
-
-# Instala faster-whisper
-uv add faster-whisper
-
-# Test rápido:
-# from faster_whisper import WhisperModel
-# model = WhisperModel("medium", device="cuda", compute_type="float16")
-# segments, info = model.transcribe("audio.mp3")
-# for s in segments: print(f"[{s.start:.2f}s] {s.text}")</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🧠</span> LiteLLM (proxy unificado para APIs)</h3>
-    <pre><code># Instala LiteLLM
+    <h3><span class="icon">🎤</span><span data-lang="es"> Whisper + LiteLLM</span><span data-lang="en"> Whisper + LiteLLM</span></h3>
+    <pre data-lang="es"><code>uv init whisper-env && uv add faster-whisper
 uv tool install litellm[proxy]
-
-# Configuración
-mkdir -p ~/.config/litellm
-cat > ~/.config/litellm/config.yaml << 'EOF'
-model_list:
-  - model_name: "local-ollama"
-    litellm_params:
-      model: "ollama/gemma3:4b"
-      api_base: "http://localhost:11434"
-  - model_name: "groq-fallback"
-    litellm_params:
-      model: "groq/llama-3.1-8b-instant"
-      api_key: "os.environ/GROQ_API_KEY"
-  - model_name: "gemini-flash"
-    litellm_params:
-      model: "gemini/gemini-2.5-flash"
-      api_key: "os.environ/GEMINI_API_KEY"
-EOF
-
-# Ejecuta
-litellm --config ~/.config/litellm/config.yaml --port 4000
-# API OpenAI-compatible en http://localhost:4000</code></pre>
+# Configurá ~/.config/litellm/config.yaml</code></pre>
+    <pre data-lang="en"><code>uv init whisper-env && uv add faster-whisper
+uv tool install litellm[proxy]
+# Configure ~/.config/litellm/config.yaml</code></pre>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 11 ═══════════════════ -->
+<!-- FASE 11 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">11</div>
-    <h2>Configurar GRUB y flujo de dual boot</h2>
+    <h2 data-lang="es">GRUB + dual boot</h2><h2 data-lang="en">GRUB + dual boot</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🔄</span> Verifica que Windows aparezca en GRUB</h3>
-    <p>Ubuntu detecta Windows automáticamente vía <code>os-prober</code>. Si no aparece:</p>
-    <pre><code># Instala os-prober
-sudo apt install -y os-prober
-
-# Edita configuración de GRUB
+    <h3><span class="icon">🔄</span><span data-lang="es"> GRUB</span><span data-lang="en"> GRUB</span></h3>
+    <pre><code>sudo apt install -y os-prober
 sudo nano /etc/default/grub
-# Asegurate de que NO tenga: GRUB_DISABLE_OS_PROBER=true
-# O si lo tiene, cámbialo a: GRUB_DISABLE_OS_PROBER=false
-
-# Regenera GRUB en la ruta correcta de Ubuntu
-sudo update-grub
-
-# Reinicia y verifica
-sudo reboot</code></pre>
-    <div class="danger">
-      <strong>⚠ NUNCA edites /boot/grub/grub.cfg manualmente</strong>
-      Ese archivo se regenera automáticamente. Si lo editás a mano, perderás los cambios en la próxima actualización de kernel. Siempre editá <code>/etc/default/grub</code> y ejecutá <code>sudo update-grub</code>.
-    </div>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">⏱️</span> Ajusta timeout y OS default</h3>
-    <pre><code>sudo nano /etc/default/grub
-
-# Tiempo de espera
+# GRUB_DISABLE_OS_PROBER=false
 GRUB_TIMEOUT=5
-
-# Ubuntu como default (ya lo es generalmente)
 GRUB_DEFAULT=0
+sudo update-grub && sudo reboot
 
-# O que recuerde tu última elección:
-# GRUB_DEFAULT=saved
-# GRUB_SAVEDEFAULT=true
-
-# Aplica
-sudo update-grub</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🕐</span> Arregla el reloj entre Windows y Linux</h3>
-    <p>Windows usa localtime, Linux usa UTC. Solución simple:</p>
-    <pre><code># En Ubuntu, usa localtime como Windows:
 sudo timedatectl set-local-rtc 1
-
-# Alternativa (hacer que Windows use UTC) — ejecutar en CMD Admin de Windows:
-# reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /d 1 /t REG_DWORD /f</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🎮</span> Flujo rápido: reiniciar a Windows desde Ubuntu</h3>
-    <pre><code># Reinicia directo a Windows (una sola vez)
-sudo grub-reboot "Windows Boot Manager" && sudo reboot
-
-# O usa el índice numérico (más robusto):
-# Verifica el índice con:
-grep -n "Windows" /boot/grub/grub.cfg
-# Si aparece en la línea 150 (menuentry 4), usá:
-# sudo grub-reboot 4 && sudo reboot</code></pre>
+sudo grub-reboot "Windows Boot Manager" && sudo reboot</code></pre>
+    <div class="danger">
+      <strong data-lang="es">⚠ NUNCA edites /boot/grub/grub.cfg</strong>
+      <strong data-lang="en">⚠ NEVER edit /boot/grub/grub.cfg</strong>
+      <span data-lang="es">Editá /etc/default/grub + sudo update-grub.</span>
+      <span data-lang="en">Edit /etc/default/grub + sudo update-grub.</span>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════════════ FASE 12 ═══════════════════ -->
+<!-- FASE 12 -->
 <div class="section container">
   <div class="section-header">
     <div class="section-number">12</div>
-    <h2>Productividad, dotfiles y troubleshooting</h2>
+    <h2 data-lang="es">Troubleshooting</h2><h2 data-lang="en">Troubleshooting</h2>
   </div>
 
   <div class="step">
-    <h3><span class="icon">🛡️</span> Snapshots con Timeshift (tu seguro de vida)</h3>
-    <pre><code># Instala Timeshift
-sudo apt install -y timeshift
-
-# Configúralo para snapshots en ext4 (usa rsync)
-# Abre Timeshift (GUI) → selecciona RSYNC como tipo
-# Selecciona tu disco como destino
-# Crea un snapshot antes de cada cambio grande (drivers, kernel, etc.)
-
-# Esto te permite hacer rollback si una actualización rompe algo.
-# Es rápido y ocupa solo el espacio de los cambios.</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">📝</span> Shell y dotfiles</h3>
-    <pre><code># Zsh + Oh My Zsh
-sudo apt install -y zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Plugins recomendados para tu workflow:
-# git, docker, z (zoxide ya lo tenés), fzf, zsh-autosuggestions, zsh-syntax-highlighting
-
-# Fuentes Nerd Fonts (iconos en terminal)
-# Descarga JetBrains Mono Nerd Font desde nerdfonts.com
-# Descomprimí en ~/.local/share/fonts/ && fc-cache -fv
-
-# Configura GNOME Terminal para usar JetBrains Mono Nerd Font
-# Preferences → Profile → Text → Custom font</code></pre>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🔧</span> Troubleshooting común</h3>
+    <h3><span class="icon">🔧</span><span data-lang="es"> Troubleshooting + Checklist</span><span data-lang="en"> Troubleshooting + Checklist</span></h3>
     <div class="warning">
-      <strong>Pantalla negra después de instalar NVIDIA</strong>
-      Ve a TTY con <code>Ctrl + Alt + F2</code>, login, y ejecuta <code>sudo ubuntu-drivers autoinstall && sudo reboot</code>. Si persiste: <code>sudo dmesg | grep -i nvidia</code>.
+      <strong data-lang="es">Pantalla negra</strong><strong data-lang="en">Black screen</strong>
+      <span data-lang="es">TTY (Ctrl+Alt+F2), <code>sudo ubuntu-drivers autoinstall && sudo reboot</code></span>
+      <span data-lang="en">TTY (Ctrl+Alt+F2), <code>sudo ubuntu-drivers autoinstall && sudo reboot</code></span>
     </div>
     <div class="warning">
-      <strong>Windows no aparece en GRUB</strong>
-      Verifica que <code>GRUB_DISABLE_OS_PROBER=false</code> en <code>/etc/default/grub</code> y regenera con <code>sudo update-grub</code>.
+      <strong data-lang="es">Windows no en GRUB</strong><strong data-lang="en">Windows not in GRUB</strong>
+      <span data-lang="es"><code>GRUB_DISABLE_OS_PROBER=false</code> en /etc/default/grub</span>
+      <span data-lang="en"><code>GRUB_DISABLE_OS_PROBER=false</code> in /etc/default/grub</span>
     </div>
     <div class="warning">
-      <strong>WiFi no funciona</strong>
-      Identifica tu chip con <code>lspci | grep -i network</code>. Intel funciona out-of-the-box. Broadcom puede necesitar <code>broadcom-sta-dkms</code>. Realtek varía según modelo.
+      <strong data-lang="es">WiFi / Docker GPU</strong><strong data-lang="en">WiFi / Docker GPU</strong>
+      <span data-lang="es">WiFi: <code>lspci | grep -i network</code>. Docker GPU: <code>sudo nvidia-ctk runtime configure --runtime=docker</code></span>
+      <span data-lang="en">WiFi: <code>lspci | grep -i network</code>. Docker GPU: <code>sudo nvidia-ctk runtime configure --runtime=docker</code></span>
     </div>
-    <div class="warning">
-      <strong>Docker no ve la GPU</strong>
-      <code>sudo nvidia-ctk runtime configure --runtime=docker && sudo systemctl restart docker</code>. Test: <code>docker run --rm --gpus all nvidia/cuda:12.6.0-base-ubuntu22.04 nvidia-smi</code>.
-    </div>
-    <div class="warning">
-      <strong>Wayland con NVIDIA se siente lento</strong>
-      Asegúrate de que <code>nvidia-drm.modeset=1</code> esté en los parámetros del kernel (<code>cat /proc/cmdline</code>). Si persiste, prueba la sesión X11 desde la pantalla de login.
-    </div>
-  </div>
-
-  <div class="step">
-    <h3><span class="icon">🎯</span> Checklist final de rendimiento</h3>
     <ul class="checklist">
-      <li><strong>zram activo:</strong> <code>swapon --show</code> → debe mostrar <code>/dev/zram0</code>.</li>
-      <li><strong>NVIDIA KMS:</strong> <code>cat /proc/cmdline | grep nvidia-drm</code> → debe incluir <code>nvidia-drm.modeset=1</code>.</li>
-      <li><strong>Driver NVIDIA cargado:</strong> <code>nvidia-smi</code> → muestra RTX 4060.</li>
-      <li><strong>Vulkan funcional:</strong> <code>vulkaninfo --summary</code> → muestra tu GPU.</li>
-      <li><strong>Docker + GPU:</strong> contenedor de test muestra <code>nvidia-smi</code>.</li>
-      <li><strong>Timeshift configurado:</strong> snapshot inicial creado.</li>
+      <li><code>swapon --show</code> → <code>/dev/zram0</code></li>
+      <li><code>nvidia-smi</code> → RTX 4060</li>
+      <li><code>vulkaninfo --summary</code> → GPU OK</li>
+      <li>Docker GPU test OK</li>
     </ul>
   </div>
 </div>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<!-- FOOTER -->
 <div class="footer">
   <div class="logo">Ubuntu 26.04 LTS + Windows 11 Dual Boot Guide</div>
-  <p>Optimizado para desarrollo de alto rendimiento — RTX 4060 / 32GB RAM</p>
+  <p data-lang="es">Optimizado para alto rendimiento — RTX 4060 / 32GB RAM</p><p data-lang="en">Optimized for high performance — RTX 4060 / 32GB RAM</p>
   <p style="margin-top: 8px;">Gentleman Programming × Abril 2026</p>
 </div>
 
+
+<script>
+(function() {
+  const html = document.documentElement;
+  const btnEs = document.getElementById('btn-es');
+  const btnEn = document.getElementById('btn-en');
+
+  const titles = {
+    es: 'Guía Dual Boot: Ubuntu 26.04 LTS + Windows 11 — Dev & Performance Stack',
+    en: 'Dual Boot Guide: Ubuntu 26.04 LTS + Windows 11 — Dev & Performance Stack'
+  };
+
+  function setLang(lang) {
+    html.setAttribute('lang', lang);
+    document.title = titles[lang];
+    localStorage.setItem('guia-lang', lang);
+    if (lang === 'es') {
+      btnEs.classList.add('active');
+      btnEn.classList.remove('active');
+    } else {
+      btnEn.classList.add('active');
+      btnEs.classList.remove('active');
+    }
+  }
+
+  const saved = localStorage.getItem('guia-lang');
+  if (saved === 'en') setLang('en');
+  else setLang('es');
+
+  window.setLang = setLang;
+})();
+</script>
 </body>
 </html>
