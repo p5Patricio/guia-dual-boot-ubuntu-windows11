@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://guia-dual-boot-ubuntu-windows11.patodev.com/sitemap.xml
